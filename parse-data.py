@@ -31,16 +31,18 @@ for record in PARSED_JSON:
     # get tract geometry from API
     r = requests.get(URL_BASE + '/' + tract)
     result = r.json()
+    print(result)
     simple_shape = result['simple_shape']
     # reverse lat/long to long/lat to conform to geoJSON; assign back to new
     # feature
     # geoJSON_simple_shape = [[coords[1], coords[0]] for coords in simple_shape['coordinates'][0][0]]
     # result['simple_shape']['coordinates'][0] = [geoJSON_simple_shape]
     new_feature['geometry'] = result['simple_shape']
-    print(new_feature)
+    new_feature['centroid'] = result['centroid']
+    # print(new_feature)
 
     GEO_JSON['features'].append(new_feature)
 
-# print GEOCODED_JSON
+
 with open('census-tracts-geojson.json', 'w') as outfile:
     json.dump(GEO_JSON, outfile)
